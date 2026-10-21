@@ -68,7 +68,7 @@ m pixelos -j$(nproc)
 
 ### 复现指定版本
 
-`pinned/pixelos-17-diting.xml` 是 `repo manifest -r` 的输出，每个项目都固定到构建时的提交（当前对应 `PixelOS_diting-17.0-20261021-1921`），用它可以得到与发布版本完全一致的源码：
+`pinned/pixelos-17-diting.xml` 是 `repo manifest -r` 的输出，每个项目都固定到构建时的提交（当前对应 `PixelOS_diting-17.0-20261021-2139`），用它可以得到与发布版本完全一致的源码：
 
 ```bash
 cp pinned/pixelos-17-diting.xml ~/pixelos/.repo/manifests/pinned.xml
