@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <remote name="gh" fetch="https://github.com" />
+  <remote name="angry" fetch="https://gitea.angry.im" />
+  <remote name="crdgitlab" fetch="https://gitlab.com" />
+
+  <!-- Device trees (forks of LineageOS lineage-24.0) -->
+  <project path="device/xiaomi/diting" name="CaoBill0522/android_device_xiaomi_diting" remote="gh" revision="pixelos-17" />
+  <project path="device/xiaomi/sm8450-common" name="CaoBill0522/android_device_xiaomi_sm8450-common" remote="gh" revision="pixelos-17" />
+
+  <!-- Kernel (LineageOS lineage-24.0, pinned in CaoBill0522 forks for GPL source availability) -->
+  <project path="kernel/xiaomi/sm8450" name="CaoBill0522/android_kernel_xiaomi_sm8450" remote="gh" revision="pixelos-17" clone-depth="1" />
+  <project path="kernel/xiaomi/sm8450-devicetrees" name="CaoBill0522/android_kernel_xiaomi_sm8450-devicetrees" remote="gh" revision="pixelos-17" clone-depth="1" />
+  <project path="kernel/xiaomi/sm8450-modules" name="CaoBill0522/android_kernel_xiaomi_sm8450-modules" remote="gh" revision="pixelos-17" clone-depth="1" />
+
+  <!-- Hardware -->
+  <project path="hardware/xiaomi" name="PixelOS-AOSP/android_hardware_xiaomi" remote="gh" revision="seventeen" />
+
+  <!-- Proprietary blobs -->
+  <project path="vendor/xiaomi/diting" name="TheMuppets/proprietary_vendor_xiaomi_diting" remote="gh" revision="lineage-24.0" clone-depth="1" />
+  <project path="vendor/xiaomi/sm8450-common" name="TheMuppets/proprietary_vendor_xiaomi_sm8450-common" remote="gh" revision="lineage-24.0" clone-depth="1" />
+
+  <!-- eSIM LPA -->
+  <project path="packages/apps/OpenEUICC" name="CaoBill0522/android_packages_apps_OpenEUICC" remote="gh" revision="pixelos-17" sync-s="true" />
+  <project path="prebuilts/openeuicc-deps" name="PeterCxy/android_prebuilts_openeuicc-deps" remote="angry" revision="540216793010cabc49782bd01844cd8dd28a4c7c" upstream="master" />
+
+  <!-- MIUI camera (crDroid) -->
+  <project path="device/xiaomi/miuicamera-diting" name="crdroidandroid/android_device_xiaomi_miuicamera" remote="crdgitlab" revision="17.0-diting" clone-depth="1" />
+  <project path="vendor/xiaomi/miuicamera-diting" name="crdroidandroid/proprietary_vendor_xiaomi_miuicamera" remote="crdgitlab" revision="16.0-diting" clone-depth="1" />
+
+  <!-- Dolby (crDroid) -->
+  <project path="hardware/dolby" name="CaoBill0522/android_hardware_dolby" remote="gh" revision="pixelos-17" clone-depth="1" />
+
+  <!-- Forks carrying ROM changes -->
+  <remove-project name="PixelOS-AOSP/android_bionic" />
+  <project path="bionic" name="CaoBill0522/android_bionic" groups="pdk" remote="gh" revision="pixelos-17" />
+  <remove-project name="PixelOS-AOSP/android_frameworks_base" />
+  <project path="frameworks/base" name="CaoBill0522/android_frameworks_base" groups="pdk-cw-fs,pdk-fs,sysui-studio" remote="gh" revision="pixelos-17" />
+  <remove-project name="PixelOS-AOSP/android_packages_apps_Settings" />
+  <project path="packages/apps/Settings" name="CaoBill0522/android_packages_apps_Settings" groups="pdk-fs,pdk-cw-tvc,sysui-studio" remote="gh" revision="pixelos-17" />
+  <remove-project name="PixelOS-AOSP/android_packages_apps_Updater" />
+  <project path="packages/apps/Updater" name="CaoBill0522/android_packages_apps_Updater" remote="gh" revision="pixelos-17" />
+  <remove-project name="PixelOS-AOSP/android_packages_apps_DolbyAtmos" />
+  <project path="packages/apps/DolbyAtmos" name="CaoBill0522/android_packages_apps_DolbyAtmos" remote="gh" revision="pixelos-17" />
+  <project path="packages/apps/JcaoParts" name="CaoBill0522/android_packages_apps_JcaoParts" remote="gh" revision="main" />
+</manifest>
