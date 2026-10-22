@@ -11,7 +11,7 @@
   <default remote="aosp" revision="refs/tags/android-17.0.0_r1" sync-j="4"/>
   
   <project name="CaoBill0522/android_bionic" path="bionic" remote="gh" revision="b2c0e849b924ee8a0b1aced9a1499872878e9600" upstream="pixelos-17" dest-branch="pixelos-17" groups="local::diting,pdk"/>
-  <project name="CaoBill0522/android_device_xiaomi_diting" path="device/xiaomi/diting" remote="gh" revision="d9730eb278d84b2e8d78460695d4d7ddb96468a5" upstream="pixelos-17" dest-branch="pixelos-17" groups="local::diting"/>
+  <project name="CaoBill0522/android_device_xiaomi_diting" path="device/xiaomi/diting" remote="gh" revision="634542a0504b4b1dd0ed3a5bc5d33ce189c3a9d5" upstream="pixelos-17" dest-branch="pixelos-17" groups="local::diting"/>
   <project name="CaoBill0522/android_device_xiaomi_sm8450-common" path="device/xiaomi/sm8450-common" remote="gh" revision="1bd72d023ded993b327c1dcac3eddb1169d96ced" upstream="pixelos-17" dest-branch="pixelos-17" groups="local::diting"/>
   <project name="CaoBill0522/android_frameworks_base" path="frameworks/base" remote="gh" revision="213043046c127b665c0c5561c545414e49f39101" upstream="pixelos-17" dest-branch="pixelos-17" groups="local::diting,pdk-cw-fs,pdk-fs,sysui-studio"/>
   <project name="CaoBill0522/android_hardware_dolby" path="hardware/dolby" remote="gh" revision="7c8e45d50ef084f4b67a45b838ba7cd62c45e931" upstream="pixelos-17" dest-branch="pixelos-17" groups="local::diting" clone-depth="1"/>

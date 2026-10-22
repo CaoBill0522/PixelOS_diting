@@ -60,15 +60,29 @@ repo sync -c -j16 --force-sync --no-tags --no-clone-bundle
 (cd packages/apps/OpenEUICC && git submodule update --init --recursive)
 
 . build/envsetup.sh
-breakfast diting userdebug
+breakfast diting user
 m pixelos -j$(nproc)
 ```
 
 产物：`out/target/product/diting/PixelOS_diting-17.0-<日期>.zip`
 
+### 签名
+
+正式版是 `user` 版本，用私有 release-keys 签名。密钥不在任何公开仓库里。设备树的 `custom_diting.mk` 会在密钥存在时自动引用：
+`-include vendor/lineage-priv/keys/keys.mk`，密钥不存在时退回 AOSP test-keys。
+
+自己编译时，可以用 `development/tools/make_key` 生成自己的一套密钥，至少包括 releasekey、platform、shared、media、networkstack、sdk_sandbox、bluetooth、nfc。然后放进上面这个目录，并写一个 `keys.mk`：
+
+```make
+PRODUCT_DEFAULT_DEV_CERTIFICATE := vendor/lineage-priv/keys/releasekey
+PRODUCT_OTA_PUBLIC_KEYS := vendor/lineage-priv/keys/releasekey
+```
+
+签名不同的包不能互相 OTA 升级。从官方发布版换成自己编译的版本，需要清除数据。
+
 ### 复现指定版本
 
-`pinned/pixelos-17-diting.xml` 是 `repo manifest -r` 的输出，每个项目都固定到构建时的提交（当前对应 `PixelOS_diting-17.0-20261021-2139`），用它可以得到与发布版本完全一致的源码：
+`pinned/pixelos-17-diting.xml` 是 `repo manifest -r` 的输出，每个项目都固定到构建时的提交（当前对应正式版 `PixelOS_diting-17.0-20261021-2304`，user + release-keys），用它可以得到与发布版本完全一致的源码：
 
 ```bash
 cp pinned/pixelos-17-diting.xml ~/pixelos/.repo/manifests/pinned.xml
