@@ -96,9 +96,10 @@ repo sync -c -j16 --force-sync
 - `changelog.md`：更新日志。
 - `certified_build_props.apk`：Play Integrity 认证属性包。
 - `builds/<zip>`：完整的 OTA 包。
+- `builds/<日期-时间>/`：首次刷机用的 `boot.img`、`dtbo.img`、`vendor_boot.img`、`recovery.img` 和 `SHA256SUMS`，与同版本 OTA 包里的分区完全一致。
 
 - `scripts/gen_ota_json.py`：从 OTA zip 生成 JSON（datetime、sha256、ota_property_files 等）。
-- `scripts/release.sh`：一键发布。JSON 在编译服务器上生成，OTA 服务器直接从编译服务器拉取 zip，校验通过后才替换 JSON。
+- `scripts/release.sh`：一键发布。JSON 在编译服务器上生成，OTA 服务器直接从编译服务器拉取 zip 和分区镜像，校验通过后才替换 JSON。zip 和镜像都只保留最近两版。
 
 只有 `datetime` 大于手机当前 `ro.build.date.utc` 的包才会显示为更新。
 
