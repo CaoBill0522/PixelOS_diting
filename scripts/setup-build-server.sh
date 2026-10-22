@@ -2,6 +2,10 @@
 # Bootstrap a fresh Ubuntu 24.04+/Debian 13 box as the diting build server.
 # Run as root on the new server:  bash setup-build-server.sh
 # Idempotent; safe to re-run.
+#
+# Optional environment:
+#   OTA_PULL_PUBKEY  public key the OTA server uses to pull builds (scripts/release.sh);
+#                    added to the build user's authorized_keys with "restrict".
 set -euo pipefail
 
 export DEBIAN_FRONTEND=noninteractive
@@ -24,8 +28,13 @@ id build >/dev/null 2>&1 || useradd -m -s /bin/bash build
 echo "build ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/build
 chmod 440 /etc/sudoers.d/build
 install -d -m 700 -o build -g build /home/build/.ssh
-cp /root/.ssh/authorized_keys /home/build/.ssh/authorized_keys
-chown build:build /home/build/.ssh/authorized_keys
+ak=/home/build/.ssh/authorized_keys
+{ cat /root/.ssh/authorized_keys
+  if [ -f "$ak" ]; then cat "$ak"; fi
+  if [ -n "${OTA_PULL_PUBKEY:-}" ]; then echo "restrict $OTA_PULL_PUBKEY"; fi
+} | awk 'NF && !seen[$0]++' > "$ak.new"
+mv "$ak.new" "$ak"
+chown build:build "$ak"
 chmod 600 /home/build/.ssh/authorized_keys
 
 # 128G RAM is enough for soong; keep a 32G swapfile as a safety net only
@@ -49,7 +58,7 @@ export CCACHE_DIR=$HOME/.ccache-dir
 export TMPDIR=$HOME/tmp
 EOF
 . ~/.build_env
-ccache -M 100G >/dev/null
+ccache -M 50G >/dev/null
 git config --global user.name CaoBill0522
 git config --global user.email 150581033+CaoBill0522@users.noreply.github.com
 git config --global color.ui false
@@ -57,3 +66,4 @@ git lfs install >/dev/null
 '
 
 echo "setup done: $(nproc) CPUs, $(free -g | awk "/Mem:/{print \$2}")G RAM"
+echo "next, as build:  git clone https://github.com/CaoBill0522/PixelOS_diting && PixelOS_diting/scripts/sync.sh"

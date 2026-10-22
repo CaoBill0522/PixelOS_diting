@@ -49,7 +49,29 @@
 
 ## 构建
 
-推荐配置：64 核、128G 内存、1T 磁盘、Ubuntu 24.04 或更新版本。在全新服务器上可以先用 root 运行 `scripts/setup-build-server.sh`。
+推荐配置：64 核、128G 内存、1T 磁盘、Ubuntu 24.04 或更新版本。全部步骤都有脚本，换一台新服务器只需要：
+
+```bash
+# 1. root：装依赖、建 build 用户、swap、ccache、git 身份（可重复执行）
+#    OTA_PULL_PUBKEY 可选，是 OTA 服务器拉包用的公钥
+curl -fsSLO https://raw.githubusercontent.com/CaoBill0522/PixelOS_diting/main/scripts/setup-build-server.sh
+OTA_PULL_PUBKEY="ssh-ed25519 AAAA... ota-pull" bash setup-build-server.sh
+
+# 2. build 用户：拉取源码到 ~/pixelos
+git clone https://github.com/CaoBill0522/PixelOS_diting
+PixelOS_diting/scripts/sync.sh             # 各 fork 的最新提交
+PixelOS_diting/scripts/sync.sh --pinned    # 或者：与上次发布完全一致的源码
+
+# 3. 放入签名密钥（见下面「签名」），然后编译
+PixelOS_diting/scripts/build.sh            # user 版 OTA 包
+PixelOS_diting/scripts/build.sh --img      # 另外生成 fastboot 线刷包 custom_diting-img.zip
+```
+
+产物：`out/target/product/diting/PixelOS_diting-17.0-<日期>.zip`
+
+`build.sh` 编译前会检查签名：找不到 release-keys 就停下，避免误发 test-keys 包（确实需要时加 `ALLOW_TEST_KEYS=1`）。调试版用 `VARIANT=userdebug`，从 user 切换过来前先 `m installclean`。
+
+手动执行的等价命令：
 
 ```bash
 mkdir ~/pixelos && cd ~/pixelos
@@ -64,14 +86,12 @@ breakfast diting user
 m pixelos -j$(nproc)
 ```
 
-产物：`out/target/product/diting/PixelOS_diting-17.0-<日期>.zip`
-
 ### 签名
 
 正式版是 `user` 版本，用私有 release-keys 签名。密钥不在任何公开仓库里。设备树的 `custom_diting.mk` 会在密钥存在时自动引用：
 `-include vendor/lineage-priv/keys/keys.mk`，密钥不存在时退回 AOSP test-keys。
 
-自己编译时，可以用 `development/tools/make_key` 生成自己的一套密钥，至少包括 releasekey、platform、shared、media、networkstack、sdk_sandbox、bluetooth、nfc。然后放进上面这个目录，并写一个 `keys.mk`：
+自己编译时，可以用 `development/tools/make_key` 生成自己的一套密钥，至少包括 releasekey、platform、shared、media、networkstack、sdk_sandbox、bluetooth、nfc，再把 releasekey 复制一份为 testkey（sepolicy 的 keys.conf 会用到）。然后放进上面这个目录（目录 700、文件 600），并写一个 `keys.mk`：
 
 ```make
 PRODUCT_DEFAULT_DEV_CERTIFICATE := vendor/lineage-priv/keys/releasekey
@@ -82,7 +102,7 @@ PRODUCT_OTA_PUBLIC_KEYS := vendor/lineage-priv/keys/releasekey
 
 ### 复现指定版本
 
-`pinned/pixelos-17-diting.xml` 是 `repo manifest -r` 的输出，每个项目都固定到构建时的提交（当前对应正式版 `PixelOS_diting-17.0-20261022-0134`，user + release-keys），用它可以得到与发布版本完全一致的源码：
+`pinned/pixelos-17-diting.xml` 是 `repo manifest -r` 的输出，每个项目都固定到构建时的提交（当前对应正式版 `PixelOS_diting-17.0-20261022-0134`，user + release-keys），用它可以得到与发布版本完全一致的源码。直接运行 `scripts/sync.sh --pinned` 即可，手动操作如下：
 
 ```bash
 cp pinned/pixelos-17-diting.xml ~/pixelos/.repo/manifests/pinned.xml
